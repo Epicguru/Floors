@@ -122,6 +122,9 @@ public class MeeleWeapon : MonoBehaviour
         {
             var collider = BoxHits[i];
 
+            if (collider.isTrigger)
+                continue;
+
             var pawn = collider.GetComponentInParent<Pawn>();
             var health = pawn != null ? pawn.Health : collider.GetComponentInParent<Health>();            
 
@@ -145,6 +148,8 @@ public class MeeleWeapon : MonoBehaviour
                 health.ChangeHealth(info);
 
                 OnDealDamage(health, pawn, info.IncomingDirection);
+
+                Debug.Log("Hit for " + info.HealthChange);
             }
         }
     }

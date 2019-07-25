@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
 
         if (IsRestarting)
         {
-            LoadingText.text = $"Loading {LoadingOp.progress * 100f : F0}%";
+            LoadingText.text = $"Loading {LoadingOp.progress * 100f}%";
         }
     }
 }
