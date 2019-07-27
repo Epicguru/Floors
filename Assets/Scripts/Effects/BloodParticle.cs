@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.Experimental.Rendering.HDPipeline;
 
 [RequireComponent(typeof(PoolObject))]

@@ -148,8 +148,6 @@ public class MeeleWeapon : MonoBehaviour
                 health.ChangeHealth(info);
 
                 OnDealDamage(health, pawn, info.IncomingDirection);
-
-                Debug.Log("Hit for " + info.HealthChange);
             }
         }
     }

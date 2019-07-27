@@ -261,6 +261,8 @@ GameObject:
   - component: {fileID: 718222167659295790}
   - component: {fileID: 718222167659295793}
   - component: {fileID: 1920857969}
+  - component: {fileID: 51132606506147188}
+  - component: {fileID: 8078068589649937013}
   m_Layer: 0
   m_Name: Katana
   m_TagString: Untagged
@@ -299,6 +301,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Katana
   Pawn: {fileID: 0}
+  ColliderSize: 0.4
+  DoDroppedRotation: 1
 --- !u!114 &1920857969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,6 +326,35 @@ MonoBehaviour:
   LightAttack: 0
   HeavyAttack: 0
   Safe: 0
+--- !u!135 &51132606506147188
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718222167659295791}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.4
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &8078068589649937013
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718222167659295791}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &718222168457630027
 GameObject:
   m_ObjectHideFlags: 0

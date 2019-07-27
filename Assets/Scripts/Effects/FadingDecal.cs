@@ -42,7 +42,7 @@ public class FadingDecal : MonoBehaviour
 
         Decal.fadeFactor = x;
 
-        if(p >= 1f)
+        if (p >= 1f)
         {
             PoolObject.Despawn(this);
         }

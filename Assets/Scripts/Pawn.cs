@@ -7,6 +7,7 @@ using UnityEngine.AI;
 public class Pawn : MonoBehaviour
 {
     private const float KNOCKBACK_UPS = 20f;
+    private static List<Item> tempItems = new List<Item>();
 
     public Health Health
     {
@@ -57,6 +58,9 @@ public class Pawn : MonoBehaviour
     public float KnockbackRecoveryFactor = 0.8f;
     public float DeathKnockbackCoefficient = 0.15f;
 
+    [Header("Item pickup")]
+    public float PickupRange = 1.5f;
+
     public Item Item
     {
         get
@@ -87,6 +91,19 @@ public class Pawn : MonoBehaviour
             Item = tempItem;
 
         InvokeRepeating("UpdateKnockback", 0f, 1f / KNOCKBACK_UPS);
+    }
+
+    private void Update()
+    {
+        var list = GetItemsInPickupRange();
+        if(list.Count > 0)
+        {
+            var item = list[0];
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                SetItem(item);
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -157,6 +174,32 @@ public class Pawn : MonoBehaviour
         i.transform.localPosition = Vector3.zero;
         i.transform.localRotation = Quaternion.identity;
         _item = i;
+    }
+
+    public List<Item> GetItemsInPickupRange()
+    {
+        if (tempItems == null)
+            tempItems = new List<Item>();
+        tempItems.Clear();
+
+        float maxSqrDst = PickupRange * PickupRange;
+
+        foreach (var item in Item.DroppedItems)
+        {
+            if (!item.IsDropped)
+                continue;
+
+            float cx = item.transform.position.x - transform.position.x;
+            float cz = item.transform.position.z - transform.position.z;
+
+            float sqrDst = cx * cx + cz * cz;
+            if(sqrDst <= maxSqrDst)
+            {
+                tempItems.Add(item);
+            }
+        }
+
+        return tempItems;
     }
 
     public void OnHealthChange(DamageInfo info)

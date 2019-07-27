@@ -48,6 +48,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 941c5e50dfb458b45b601436124b9fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CollisionMask:
+    serializedVersion: 2
+    m_Bits: 1811
   Speed: 100
   Direction: {x: 0, y: 0, z: 1}
   KnockbackMultiplier: 5
@@ -67,7 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e2734596544e2b4fbd79b815925a7d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: 18006
+  _id: 20526
   UponSpawn:
     m_PersistentCalls:
       m_Calls: []

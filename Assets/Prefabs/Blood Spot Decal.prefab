@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9634c601d52f7c64789e2974b27d1e86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FadeTime: 15
+  FadeTime: 60
   Timer: 0
   FadeCurve:
     serializedVersion: 2
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e2734596544e2b4fbd79b815925a7d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: 0
+  _id: 21322
   UponSpawn:
     m_PersistentCalls:
       m_Calls: []

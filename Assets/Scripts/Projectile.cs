@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(PoolObject))]
 public class Projectile : MonoBehaviour
 {
+    public LayerMask CollisionMask;
     public float Speed = 2f;
     public Vector3 Direction = Vector3.forward;
     public float KnockbackMultiplier = 1f;
@@ -21,7 +22,7 @@ public class Projectile : MonoBehaviour
 
     private void MoveAndCollide(Vector3 oldPos, Vector3 newPos)
     {
-        bool didHit = Physics.Linecast(oldPos, newPos, out RaycastHit hit);
+        bool didHit = Physics.Linecast(oldPos, newPos, out RaycastHit hit, CollisionMask);
 
         if (didHit)
         {
