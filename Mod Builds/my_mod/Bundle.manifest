@@ -1,0 +1,26 @@
+ManifestFileVersion: 0
+CRC: 3575977351
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: a7f3107fa67c224afbd338c68a448581
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 8acafbfcec8692284a6dfc4e13e2c25e
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Mods/my_mod/Content/New Material.mat
+- Assets/Mods/my_mod/Content/This animation.anim
+- Assets/Mods/my_mod/Content/Asd.png
+Dependencies: []

@@ -7,6 +7,8 @@ public class Spawnables : MonoBehaviour
     public BloodParticle _bloodParticle;
     public static PoolObject SparksEffect { get { return Instance._sparksEffect; } }
     public PoolObject _sparksEffect;
+    public static PoolObject BulletShell { get { return Instance._bulletShell; } }
+    public PoolObject _bulletShell;
 
     private static Spawnables Instance
     {

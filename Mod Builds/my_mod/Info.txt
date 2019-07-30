@@ -1,0 +1,11 @@
+{
+    "ID": "my_mod",
+    "Name": "My Mod",
+    "Author": "James",
+    "Version": "0.1",
+    "Description": "This is the default mod description",
+    "HasBundle": true,
+    "Assemblies": [
+        "my_mod.dll"
+    ]
+}

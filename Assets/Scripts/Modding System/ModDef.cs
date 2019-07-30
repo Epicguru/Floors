@@ -49,6 +49,7 @@ public class ModDef : ScriptableObject
         // TODO get all assets in subfolders too.
         string[] guids = UnityEditor.AssetDatabase.FindAssets("", new string[] { "Assets/Mods/" + ID + "/Content" });
 
+        // TODO aparently scenes and assets can't be in the same bundle, so create more than one bundle per mod.
         int count = 0;
         foreach (var guid in guids)
         {
@@ -56,7 +57,7 @@ public class ModDef : ScriptableObject
             UnityEditor.AssetImporter.GetAtPath(path).assetBundleName = ID;
             count++;
         }
-        Debug.Log($"assigned {count} assets to the bundle.");
+        Debug.Log($"Assigned {count} assets to the bundle.");
 
         // Step 2: Create mod info.
         ModInfo info = new ModInfo
@@ -80,7 +81,7 @@ public class ModDef : ScriptableObject
         File.WriteAllText(infoPath, json);
         Debug.Log("Written mod info.");
 
-        // Step 4: Write asset bundle. Takes ages.
+        // Step 4: Write asset bundle. Can take ages.
         BuildBundleTo(tempBundle);
         File.Copy(Path.Combine(tempBundle, ID), Path.Combine(outputDir, "Bundle"));
         File.Copy(Path.Combine(tempBundle, ID + ".manifest"), Path.Combine(outputDir, "Bundle.manifest"));
@@ -105,6 +106,7 @@ public class ModDef : ScriptableObject
 
         watch.Stop();
         Debug.Log($"Finished build in {watch.Elapsed.TotalMilliseconds:n1} ms.");
+        Debug.Log($"Path: {outputDir}");
     }
 
     private bool CopyAssembliesTo(string outputPath, string[] assemblies)

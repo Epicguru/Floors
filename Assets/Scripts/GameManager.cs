@@ -14,6 +14,10 @@ public class GameManager : MonoBehaviour
     public float FadeTime = 1.5f;
     public TextMeshProUGUI LoadingText;
 
+    [Header("Floor & Room")]
+    public int Floor = 0;
+    public TextMeshProUGUI FloorText;
+
     [Header("State")]
     public bool IsRestarting = false;
     public bool IsGameOver = false;
@@ -30,6 +34,14 @@ public class GameManager : MonoBehaviour
         LoadingOp = SceneManager.LoadSceneAsync("Dev Scene", LoadSceneMode.Single);
     }
 
+    private void SetText(TextMeshProUGUI text, string msg)
+    {
+        if(text.text != msg)
+        {
+            text.text = msg;
+        }
+    }
+
     private void Update()
     {
         if((Player == null || Player.Health.IsDead) && !IsGameOver)
@@ -37,6 +49,8 @@ public class GameManager : MonoBehaviour
             IsGameOver = true;
             fadeTimer = 0f;
         }
+
+        SetText(FloorText, $"Floor {Floor}");
 
         if (IsGameOver)
         {

@@ -27,6 +27,8 @@ public class Gun : MonoBehaviour
     [Header("Shooting")]
     public Projectile Bullet;
     public Transform Muzzle;
+    public Transform ShellSpawn;
+    public Vector3 ShellVelocity = new Vector3(3f, 4f, -0.5f);
 
     [Header("Stats")]
     public int MagCapacity = 30;
@@ -89,6 +91,16 @@ public class Gun : MonoBehaviour
         p.transform.position = Item.Pawn.transform.position + p.Direction * 1f + Vector3.up * 1f;
         p.transform.forward = p.Direction;
 
+        // Spawn the shell, if the transform has been set up.
+        if(ShellSpawn != null)
+        {
+            Vector3 vel = ShellSpawn.TransformVector(ShellVelocity);
+
+            var obj = PoolObject.Spawn(Spawnables.BulletShell);
+            obj.transform.position = ShellSpawn.position;
+            obj.transform.up = ShellSpawn.transform.forward;
+            obj.GetComponent<Rigidbody>().velocity = vel;
+        }
     }
 
     public void UponAnimationEvent(AnimationEvent e)
