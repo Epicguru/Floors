@@ -320,6 +320,7 @@ MonoBehaviour:
   LightDamage: 40
   HeavyDamage: 80
   Knockback: 20
+  LungeStrength: 5
   BloodCount: 12
   BloodVelocity: 13
   BloodRandomness: {x: 6, y: 3, z: 6}

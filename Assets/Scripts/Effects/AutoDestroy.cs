@@ -31,6 +31,7 @@ public class AutoDestroy : MonoBehaviour
     {
         if(Particles != null)
             Particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        CancelInvoke("Kill");
     }
 
     private void Kill()

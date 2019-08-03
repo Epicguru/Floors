@@ -93,19 +93,6 @@ public class Pawn : MonoBehaviour
         InvokeRepeating("UpdateKnockback", 0f, 1f / KNOCKBACK_UPS);
     }
 
-    private void Update()
-    {
-        var list = GetItemsInPickupRange();
-        if(list.Count > 0)
-        {
-            var item = list[0];
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                SetItem(item);
-            }
-        }
-    }
-
     private void FixedUpdate()
     {
         if (IsBot)

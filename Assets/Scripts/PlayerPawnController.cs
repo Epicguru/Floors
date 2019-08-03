@@ -14,11 +14,25 @@ public class PlayerPawnController : MonoBehaviour
         if (Pawn == null)
             return;
 
+        UpdatePickup();
         UpdateMeele();
         UpdateGun();
         RotateCamera();
         SetRotationInput();
         SetDirectionInput();
+    }
+
+    private void UpdatePickup()
+    {
+        var list = Pawn.GetItemsInPickupRange();
+        if (list.Count > 0)
+        {
+            var item = list[0];
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Pawn.Item = item;
+            }
+        }
     }
 
     private void UpdateGun()
@@ -95,14 +109,15 @@ public class PlayerPawnController : MonoBehaviour
 
         rawInput.Normalize();
 
-        float forwardsAngle = GameCamera.Instance.Angle + 180f;
+        float forwardsAngle = GameCamera.Instance.Angle;
 
-        forwards.x = Mathf.Cos(forwardsAngle * Mathf.Deg2Rad);
-        forwards.z = Mathf.Sin(forwardsAngle * Mathf.Deg2Rad);
+        forwards.x = Mathf.Sin(forwardsAngle * Mathf.Deg2Rad);
+        forwards.z = Mathf.Cos(forwardsAngle * Mathf.Deg2Rad);
         forwards.y = 0f;
 
-        right.x = Mathf.Cos((forwardsAngle - 90f) * Mathf.Deg2Rad);
-        right.z = Mathf.Sin((forwardsAngle - 90f) * Mathf.Deg2Rad);
+        
+        right.x = Mathf.Sin((forwardsAngle + 90f) * Mathf.Deg2Rad);
+        right.z = Mathf.Cos((forwardsAngle + 90f) * Mathf.Deg2Rad);
         right.y = 0f;
 
         dir = Vector3.zero;

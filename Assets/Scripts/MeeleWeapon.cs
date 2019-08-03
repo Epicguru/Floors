@@ -37,6 +37,9 @@ public class MeeleWeapon : MonoBehaviour
     public float HeavyDamage = 80f;
     public float Knockback = 2f;
 
+    [Header("Lunge")]
+    public float LungeStrength = 1.5f;
+
     [Header("Gore")]
     public int BloodCount = 10;
     public float BloodVelocity = 6f;
@@ -100,6 +103,12 @@ public class MeeleWeapon : MonoBehaviour
 
                 HitObjects(HeavyHitbox, HeavyDamage);
                 HeavyAttackCounter++;
+
+                break;
+
+            case "lunge":
+
+                Item.Pawn.AddKnockback(Item.transform.forward * LungeStrength);
 
                 break;
         }

@@ -1,12 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public Pawn Player;
+
+    [Header("Floor")]
+    // TODO make this stuff floor specific
+    public Vector2Int FloorSize = new Vector2Int(100, 100);
 
     [Header("Game Over")]
     public CanvasGroup GameOverFade;

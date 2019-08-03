@@ -22,7 +22,7 @@ public class Projectile : MonoBehaviour
 
     private void MoveAndCollide(Vector3 oldPos, Vector3 newPos)
     {
-        bool didHit = Physics.Linecast(oldPos, newPos, out RaycastHit hit, CollisionMask);
+        bool didHit = Physics.Linecast(oldPos, newPos, out RaycastHit hit, CollisionMask, QueryTriggerInteraction.Ignore);
 
         if (didHit)
         {

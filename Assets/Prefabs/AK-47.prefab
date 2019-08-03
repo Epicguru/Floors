@@ -623,7 +623,7 @@ MonoBehaviour:
   Bullet: {fileID: 1068931153871574726, guid: f98f73815dae23947b7b962c6ccc671b, type: 3}
   Muzzle: {fileID: 653423550}
   ShellSpawn: {fileID: 553118662}
-  ShellVelocity: {x: 3, y: 4, z: -0.5}
+  ShellVelocity: {x: 1.5, y: 1.8, z: -0.5}
   MagCapacity: 30
   MagBullets: 30
   RPM: 650

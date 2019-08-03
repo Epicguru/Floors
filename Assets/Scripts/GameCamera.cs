@@ -31,11 +31,19 @@ public class GameCamera : MonoBehaviour
     private Camera _camera;
 
     public float Height = 5f;
-    public float Distance = 6f;
     public Transform Target;
-    public float Angle = 45f;
+    public float Angle;
 
+    public Vector3 OverridePos;
+    public Vector3 OverrideAngle;
+
+    public bool Override;
+    public AnimationCurve LerpCurve;
+    public float LerpTime = 1f;
+
+    private float overrideAmount = 0f;
     private Vector3 currentPos;
+    private float lerpTimer;
 
     private void Awake()
     {
@@ -47,16 +55,19 @@ public class GameCamera : MonoBehaviour
         if (Target == null)
             return;
 
-        Vector3 pos = Target.transform.position;
-        pos.y += Height;
+        lerpTimer += Time.fixedDeltaTime * (Override ? 1f : -1f);
+        lerpTimer = Mathf.Clamp(lerpTimer, 0f, LerpTime);
+        float p = lerpTimer / LerpTime;
+        float x = LerpCurve.Evaluate(p);
+        overrideAmount = x;
 
-        float x = Mathf.Cos(Angle * Mathf.Deg2Rad) * Distance;
-        float z = Mathf.Sin(Angle * Mathf.Deg2Rad) * Distance;
+        Vector3 posA = Target.transform.position;
+        posA.y += Height;
+        Vector3 angleA = new Vector3(90f, Angle, 0f);
+        Vector3 posB = OverridePos;
+        Vector3 angleB = OverrideAngle;
 
-        pos.x += x;
-        pos.z += z;
-
-        transform.position = pos;
-        transform.LookAt(Target);
+        transform.position = Vector3.Lerp(posA, posB, overrideAmount);
+        transform.localRotation = Quaternion.Lerp(Quaternion.Euler(angleA), Quaternion.Euler(angleB), overrideAmount);
     }
 }

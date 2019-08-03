@@ -99,7 +99,9 @@ public class Gun : MonoBehaviour
             var obj = PoolObject.Spawn(Spawnables.BulletShell);
             obj.transform.position = ShellSpawn.position;
             obj.transform.up = ShellSpawn.transform.forward;
-            obj.GetComponent<Rigidbody>().velocity = vel;
+            Vector3 randomness = new Vector3(Random.Range(-1f, 1f), Random.Range(0f, 1f), Random.Range(-1f, 1f));
+            obj.GetComponent<FallingEffect>().Velocity = vel + randomness;
+            obj.GetComponent<FallingEffect>().AngularVel = new Vector3(Random.Range(-150f, 150f), Random.Range(-100f, 100f), Random.Range(-40f, 40f));
         }
     }
 
