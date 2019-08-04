@@ -12,7 +12,7 @@ public class RoomInspector : Editor
 
     public override void OnInspectorGUI()
     {
-        Room d = target as Room;
+        Room r = target as Room;
 
         if(GUILayout.Button($"{(inEdit ? "Exit" : "Enter")} edit view"))
         {
@@ -24,7 +24,7 @@ public class RoomInspector : Editor
                     sv.orthographic = true;
                     oldPivot = sv.pivot;
                     oldRot = sv.rotation;
-                    sv.pivot = d.transform.position;
+                    sv.pivot = r.transform.position;
                     sv.rotation = Quaternion.Euler(90f, 0f, 0f);
                     inEdit = true;
                 }
@@ -47,10 +47,19 @@ public class RoomInspector : Editor
             EditorGUILayout.HelpBox("Currently in edit mode. Press space to define areas in the room.", MessageType.Info);
         }
 
-        if (Event.current.isKey && Event.current.keyCode == KeyCode.Space)
+        GUILayout.Space(10);
+        if(GUILayout.Button("Create new area"))
         {
-
+            RectInt[] newAreas = new RectInt[r.Areas.Length + 1];
+            System.Array.Copy(r.Areas, newAreas, r.Areas.Length);
+            newAreas[r.Areas.Length] = new RectInt((int)r.transform.position.x, (int)r.transform.position.y, 5, 5);
+            r.Areas = newAreas;
         }
+        if(r.Areas.Length == 0)
+        {
+            EditorGUILayout.HelpBox("No areas are defined for this room. Press the Create new area button above.", MessageType.Error);
+        }
+
 
         DrawDefaultInspector();
     }

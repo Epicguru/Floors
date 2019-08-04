@@ -17,7 +17,7 @@ public class PlayerPawnController : MonoBehaviour
         UpdatePickup();
         UpdateMeele();
         UpdateGun();
-        RotateCamera();
+        // RotateCamera(); // Disabled for now, more testing needed.
         SetRotationInput();
         SetDirectionInput();
     }

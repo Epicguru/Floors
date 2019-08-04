@@ -40,6 +40,8 @@ public class GameCamera : MonoBehaviour
     public bool Override;
     public AnimationCurve LerpCurve;
     public float LerpTime = 1f;
+    public float ZOffset = -10f;
+    public float Tilt = 60f;
 
     private float overrideAmount = 0f;
     private Vector3 currentPos;
@@ -63,7 +65,8 @@ public class GameCamera : MonoBehaviour
 
         Vector3 posA = Target.transform.position;
         posA.y += Height;
-        Vector3 angleA = new Vector3(90f, Angle, 0f);
+        posA.z += ZOffset;
+        Vector3 angleA = new Vector3(Tilt, Angle, 0f);
         Vector3 posB = OverridePos;
         Vector3 angleB = OverrideAngle;
 

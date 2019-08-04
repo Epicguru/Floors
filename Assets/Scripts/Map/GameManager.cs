@@ -56,7 +56,9 @@ public class GameManager : MonoBehaviour
             fadeTimer = 0f;
         }
 
-        SetText(FloorText, $"Floor {Floor}");
+        Room.AssignAllPawns();
+
+        SetText(FloorText, $"Floor {Floor} {(Player.CurrentRoom == null ? "" : $"- {Player.CurrentRoom.Name.Trim()}")}");
 
         if (IsGameOver)
         {

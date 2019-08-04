@@ -2,9 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Pawn))]
 public class AIPawnController : MonoBehaviour
 {
-    public Pawn Pawn;
+    public Pawn Pawn
+    {
+        get
+        {
+            if (_pawn == null)
+                _pawn = GetComponent<Pawn>();
+            return _pawn;
+        }
+    }
+    private Pawn _pawn;
+
+    /// <summary>
+    /// The target that the AI has selected to chase, attack or run away from. May be null.
+    /// </summary>
+    public Pawn TargetEnemy;
+
     public float AttackRange = 1.5f;
     [Range(0f, 1f)]
     public float HeavyAttackChance = 0.333f;
@@ -17,6 +33,7 @@ public class AIPawnController : MonoBehaviour
         if (Pawn == null)
             return;
 
+        Pawn.IsBot = true;
         UpdateMeele();
         UpdateGun();
     }
@@ -33,14 +50,14 @@ public class AIPawnController : MonoBehaviour
             lastAttackCounter = m.AttackCounter;
         }
 
-        if(Pawn.BotTarget == null)
+        if(TargetEnemy == null)
         {
             m.LightAttack = false;
             m.HeavyAttack = false;
         }
         else
         {
-            Vector3 targetPos = Pawn.BotTarget.transform.position;
+            Vector3 targetPos = TargetEnemy.transform.position;
             Vector3 botPos = Pawn.transform.position;
 
             float sqrDst = (targetPos - botPos).sqrMagnitude;

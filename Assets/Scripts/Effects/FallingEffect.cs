@@ -60,7 +60,7 @@ public class FallingEffect : MonoBehaviour
 
     private bool DoesIntersect(Vector3 start, Vector3 end, out Vector3 normal)
     {
-        if(Physics.Linecast(start, end, out RaycastHit hit, Mask))
+        if(Physics.Linecast(start, end, out RaycastHit hit, Mask, QueryTriggerInteraction.Ignore))
         {
             normal = hit.normal;
             return true;

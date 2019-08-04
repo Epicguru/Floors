@@ -1,12 +1,32 @@
 fileFormatVersion: 2
-guid: e02fc0d8659c041428fb830e740cccb9
+guid: 74733ba9fd94c204398a3ab3753bcfa1
 ModelImporter:
   serializedVersion: 28
   internalIDToNameTable:
   - first:
       74: 1989289236423521904
     second: Default Take
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bars
+    second: {fileID: 2100000, guid: 1fb29a441fa0479489392a080ad40c2c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lock
+    second: {fileID: 2100000, guid: af86adde283b551438dc4113f86bba73, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lock_Frame
+    second: {fileID: 2100000, guid: 865a31b9d2012ff499602aa0a9ff4ecc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lock_Keyhole
+    second: {fileID: 2100000, guid: 9c6f71cf0e724424fb44240f57f5eb16, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

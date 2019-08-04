@@ -3,12 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Health))]
 public class Pawn : MonoBehaviour
 {
-    private const float KNOCKBACK_UPS = 20f;
+    public static List<Pawn> AllAlive = new List<Pawn>();
     private static List<Item> tempItems = new List<Item>();
+    private const float KNOCKBACK_UPS = 20f;
 
+    public AIPawnController AIPawnController
+    {
+        get
+        {
+            if (_aiController == null)
+                _aiController = GetComponent<AIPawnController>();
+            return _aiController;
+        }
+    }
+    private AIPawnController _aiController;
+    public PlayerPawnController PlayerPawnController
+    {
+        get
+        {
+            if (_playerController == null)
+                _playerController = GetComponent<PlayerPawnController>();
+            return _playerController;
+        }
+    }
+    private PlayerPawnController _playerController;
     public Health Health
     {
         get
@@ -49,10 +71,34 @@ public class Pawn : MonoBehaviour
         }
     }
     private PawnRagdoll _ragdoll;
+    public Animator StateMachineAnimator
+    {
+        get
+        {
+            if (_anim == null)
+                _anim = GetComponent<Animator>();
+            return _anim;
+        }
+    }
+    private Animator _anim;
 
     public string Name = "Pawn";
+
+    [Header("AI")]
     public bool IsBot = true;
-    public Transform BotTarget;
+    public Vector3 BotTargetPos;
+    public float BotSlowdownDistance = 1f;
+    public AnimationCurve BotSlowdownCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
+    public bool BotAtTarget
+    {
+        get
+        {
+            const float DST = 0.5f;
+            return (transform.position - BotTargetPos).sqrMagnitude <= (DST * DST);
+        }
+    }
+
+    [Header("Movement")]
     public float Speed = 5;
     [Range(0f, 1f)]
     public float KnockbackRecoveryFactor = 0.8f;
@@ -81,9 +127,13 @@ public class Pawn : MonoBehaviour
     public Vector2 DirectionInput;
     public float Rotation;
 
+    [Header("Other")]
+    public Room CurrentRoom;
+
     private Vector3 knockback;
     [SerializeField]
     private Item tempItem;
+    private float botSpeedMulti = 1f;
 
     private void Awake()
     {
@@ -91,6 +141,8 @@ public class Pawn : MonoBehaviour
             Item = tempItem;
 
         InvokeRepeating("UpdateKnockback", 0f, 1f / KNOCKBACK_UPS);
+        AllAlive.Add(this);
+        ClearBotTarget();
     }
 
     private void FixedUpdate()
@@ -112,6 +164,8 @@ public class Pawn : MonoBehaviour
 
         final += new Vector3(input.x, -1f, input.y);
         final *= Speed;
+        if (IsBot)
+            final *= botSpeedMulti;
 
         final += knockback;
 
@@ -120,13 +174,41 @@ public class Pawn : MonoBehaviour
         CharacterController.Move(final);
     }
 
+    /// <summary>
+    /// Stop bot movement by setting the target position to it's current position.
+    /// </summary>
+    public void ClearBotTarget()
+    {
+        BotTargetPos = transform.position;
+    }
+
     private void BotBehaviour()
     {
         if (Health.IsDead)
             return;
 
-        if(BotTarget != null)
-            Nav.SetDestination(BotTarget.position);
+        if(Nav.pathStatus == NavMeshPathStatus.PathPartial)
+        {
+            //Debug.LogWarning("Cleared bot partial path.");
+            ClearBotTarget();
+        }
+
+        Nav.SetDestination(BotTargetPos);
+
+        Vector3 diff = (transform.position - BotTargetPos);
+        float sqr = diff.sqrMagnitude;
+        if(sqr <= BotSlowdownDistance * BotSlowdownDistance)
+        {
+            float real = diff.magnitude;
+            float p = 1f - (real / BotSlowdownDistance);
+            float x = BotSlowdownCurve.Evaluate(p);
+
+            botSpeedMulti = x;
+        }
+        else
+        {
+            botSpeedMulti = 1f;
+        }
 
         Vector3 velocity = Nav.desiredVelocity.normalized;
         DirectionInput.x = velocity.x;
@@ -198,12 +280,34 @@ public class Pawn : MonoBehaviour
         }
     }
 
+    private void RemoveFromRooms()
+    {
+        if (AllAlive.Contains(this))
+            AllAlive.Remove(this);
+        if (CurrentRoom != null)
+            if (CurrentRoom.Pawns.Contains(this))
+                CurrentRoom.Pawns.Remove(this);
+    }
+
+    private void OnDestroy()
+    {
+        RemoveFromRooms();
+    }
+
     private void OnDrawGizmos()
     {
-        if (IsBot)
+        if (IsBot && Application.isPlaying)
         {
             Gizmos.color = Color.green;
             Gizmos.DrawLine(transform.position + Vector3.up * 2f, transform.position + Vector3.up * 2f + Nav.desiredVelocity * 2f);
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position + Vector3.up * 2f, BotTargetPos);
+            Gizmos.DrawCube(BotTargetPos, Vector3.one * 0.7f);
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position + Vector3.up * 2f, Nav.pathEndPosition);
+            Gizmos.DrawCube(Nav.pathEndPosition, Vector3.one * 0.3f);
         }
     }
 }
