@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Item))]
@@ -6,6 +7,7 @@ public class MeeleWeapon : MonoBehaviour
 {
     private const int MAX_HITS = 32;
     private static readonly Collider[] BoxHits = new Collider[MAX_HITS];
+    private static readonly List<(Health, Pawn)> tempColliders = new List<(Health, Pawn)>();
 
     public Item Item
     {
@@ -40,10 +42,19 @@ public class MeeleWeapon : MonoBehaviour
     [Header("Lunge")]
     public float LungeStrength = 1.5f;
 
+    [Header("Takedown")]
+    public bool CanDoTakedown = false;
+    public Vector3 TakedownEnemyPos = new Vector3(0f, 0f, 1f);
+    public Vector3 TakedownEnemyDirection = new Vector3(0f, 0f, -1f);
+
     [Header("Gore")]
     public int BloodCount = 10;
     public float BloodVelocity = 6f;
     public Vector3 BloodRandomness = new Vector3(5f, 2f, 5f);
+    [Range(0f, 1f)]
+    public float LightDecapChance = 0f;
+    [Range(0f, 1f)]
+    public float HeavyDecapChance = 0.1f;
 
     [Header("Input")]
     public bool LightAttack;
@@ -85,6 +96,39 @@ public class MeeleWeapon : MonoBehaviour
         Animator.SetBool("Safe", Safe);
         Animator.SetBool("Attack", !Safe && (LightAttack || HeavyAttack));
         Animator.SetBool("Heavy", HeavyAttack);
+
+        UpdateTakedown();
+    }
+
+    private void UpdateTakedown()
+    {
+        if (Item.IsDropped)
+            return;
+
+        if (Safe)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            var list = GetCollisionPawns(LightHitbox);
+
+            foreach ((Health h, Pawn p) in list)
+            {
+                if (p == null)
+                    continue;
+
+                if (p == Item.Pawn)
+                    continue;
+
+                if (Item.Pawn.CanPerformTakedown(p))
+                {
+                    Item.Pawn.PerformTakedownOn(p);
+                    break;
+                }
+            }
+
+            list.Clear();
+        }    
     }
 
     private void UponAnimationEvent(AnimationEvent e)
@@ -94,14 +138,14 @@ public class MeeleWeapon : MonoBehaviour
         {
             case "light":
 
-                HitObjects(LightHitbox, LightDamage);
+                HitObjects(LightHitbox, LightDamage, Random.value <= LightDecapChance);
                 LightAttackCounter++;
 
                 break;
 
             case "heavy":
 
-                HitObjects(HeavyHitbox, HeavyDamage);
+                HitObjects(HeavyHitbox, HeavyDamage, Random.value <= HeavyDecapChance);
                 HeavyAttackCounter++;
 
                 break;
@@ -111,11 +155,20 @@ public class MeeleWeapon : MonoBehaviour
                 Item.Pawn.AddKnockback(Item.transform.forward * LungeStrength);
 
                 break;
+
+            case "takedown":
+
+                if(Item.Pawn?.TakedownPawn != null)
+                    TakedownKill(Item.Pawn.TakedownPawn, e.intParameter > 0);
+
+                break;
         }
     }
 
-    private void HitObjects(BoxCollider c, float damage)
+    private static List<(Health, Pawn)> GetCollisionPawns(BoxCollider c)
     {
+        tempColliders.Clear();
+
         Vector3 center = c.transform.TransformPoint(c.center);
         Vector3 scale = c.transform.lossyScale;
         Vector3 size = new Vector3(scale.x * c.size.x, scale.y * c.size.y, scale.z * c.size.z);
@@ -135,9 +188,26 @@ public class MeeleWeapon : MonoBehaviour
                 continue;
 
             var pawn = collider.GetComponentInParent<Pawn>();
-            var health = pawn != null ? pawn.Health : collider.GetComponentInParent<Health>();            
+            var health = pawn != null ? pawn.Health : collider.GetComponentInParent<Health>();
 
-            if(pawn != null)
+            if (health == null)
+                continue;
+
+            tempColliders.Add((health, pawn));
+        }
+
+        return tempColliders;
+    }
+
+    private void HitObjects(BoxCollider c, float damage, bool decap)
+    {
+        var list = GetCollisionPawns(c);
+
+        foreach (var pair in list)
+        {
+            (Health health, Pawn pawn) = pair;
+
+            if (pawn != null)
             {
                 if (pawn == Item.Pawn)
                     continue;
@@ -152,13 +222,15 @@ public class MeeleWeapon : MonoBehaviour
             if (health != null && !health.IsDead)
             {
                 DamageInfo info = new DamageInfo(-damage, Item.Name, "Meele damage.");
-                info.IncomingDirection = (collider.transform.position - Item.Pawn.transform.position).normalized;
-
+                info.IncomingDirection = (health.transform.position - Item.Pawn.transform.position).normalized;
+                info.ShouldDecap = decap;
                 health.ChangeHealth(info);
 
                 OnDealDamage(health, pawn, info.IncomingDirection);
             }
         }
+
+        list.Clear();   
     }
 
     private void OnDealDamage(Health h, Pawn p, Vector3 direction)
@@ -174,5 +246,13 @@ public class MeeleWeapon : MonoBehaviour
             blood.transform.position = h.transform.position + Vector3.up * 1f + direction * 0.8f;
             blood.Velocity = direction.normalized * BloodVelocity + rand;
         }
+    }
+
+    private void TakedownKill(Pawn pawn, bool decap)
+    {
+        // Kill the takedown enemy using this meele weapon. The animation has already been played.
+        DamageInfo info = new DamageInfo(-pawn.Health.CurrentHealth, Item.Name, "Meele takedown damage.");
+        info.ShouldDecap = decap;
+        pawn.Health.ChangeHealth(info);
     }
 }

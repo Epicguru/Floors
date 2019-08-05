@@ -65,7 +65,7 @@ public class Projectile : MonoBehaviour
 
         if(health != null)
         {
-            DamageInfo info = new DamageInfo(-Damage, "Projectile", "Projectile damage", hit)
+            DamageInfo info = new DamageInfo(-Damage, "projectile", "Projectile damage", hit)
             {
                 IncomingDirection = Direction
             };

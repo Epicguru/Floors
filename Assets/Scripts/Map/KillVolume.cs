@@ -28,7 +28,7 @@ public class KillVolume : MonoBehaviour
             change = -h.MaxHealth * HealthPercentage;
         }
 
-        DamageInfo info = new DamageInfo(change, "The void", "Damage from the void. There is no escape...");
+        DamageInfo info = new DamageInfo(change, "the void", "Damage from the void. There is no escape...");
         info.HitPoint = other.transform.position;
 
         h.ChangeHealth(info);

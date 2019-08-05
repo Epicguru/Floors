@@ -30,4 +30,8 @@ Assets/StreamingAssets/Bundles
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
 
-Assets/Scenes/Dev Scene/
+# Lightmap stuff
+Lightmap-*.png
+Lightmap-*.exr
+Lightmap-*.png.meta
+Lightmap-*.exr.meta

@@ -9,6 +9,7 @@ public struct DamageInfo
     public Vector3 IncomingDirection;
     public Vector3 HitPoint;
     public Vector3 HitNormal;
+    public bool ShouldDecap;
 
     public DamageInfo(float change, string dealer = null, string description = null)
     {
@@ -18,6 +19,7 @@ public struct DamageInfo
         this.IncomingDirection = Vector3.zero;
         this.HitPoint = Vector3.zero;
         this.HitNormal = Vector3.zero;
+        this.ShouldDecap = false;
     }
 
     public DamageInfo(float change, string dealer, string description, RaycastHit hit)
